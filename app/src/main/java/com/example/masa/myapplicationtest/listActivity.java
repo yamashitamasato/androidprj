@@ -25,10 +25,10 @@ public class listActivity extends AppCompatActivity{
         loadActivity();
     }
     private void loadActivity(){
-
-        LinearLayout ll = new LinearLayout(this);
-        ll.setOrientation(LinearLayout.HORIZONTAL);
+        setContentView(R.layout.activity_list);
+        LinearLayout ll = (LinearLayout) findViewById(R.id.activity_list);
         setContentView(ll);
+
         ListView lv = new ListView(this);
         String str = "data/data/" + getPackageName() + "/Sample.db";  //データベースの保存先の指定
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(str, null);  //データベースオブジェクトの生成
