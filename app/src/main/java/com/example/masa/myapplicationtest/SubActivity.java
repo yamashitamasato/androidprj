@@ -8,11 +8,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.CalendarView.OnDateChangeListener;
 import android.widget.Toast;
 import android.widget.*;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,28 +72,52 @@ public class SubActivity extends Activity {
         String limit = tv1.getText().toString();
         Spinner sp = (Spinner)findViewById(R.id.spinner);
         String category = (String)sp.getSelectedItem();
-        String str = "data/data/" + getPackageName() + "/Sample.db";  //データベースの保存先の指定
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(str, null);
-        String qry2 ="INSERT INTO site(name, time, Category) VALUES ('"+Title+"', '"+limit+"', '"+category+"')";
-        db.execSQL(qry2);
-        db.close();
+        if (TextUtils.isEmpty(Title)){
+            new AlertDialog.Builder(SubActivity.this)
+                    .setTitle("No Title")
+                    .setMessage("タイトルが未入力です。\n")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    }).show();
 
-        new AlertDialog.Builder(SubActivity.this)
-                .setTitle("title")
-                .setMessage("保存しました。\nまだ続けますか？")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        loadActivity();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whhich){
-                        Intent intent = new Intent(getApplication(), MainActivity.class);
-                        startActivity(intent);
-                    }
-                })
-                .show();
+        }
+        else if(TextUtils.isEmpty(limit)){
+            new AlertDialog.Builder(SubActivity.this)
+                    .setTitle("No Limit")
+                    .setMessage("期日が未入力です。\n")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    }).show();
+
+        }
+        else{
+            String str = "data/data/" + getPackageName() + "/Sample.db";  //データベースの保存先の指定
+            SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(str, null);
+            String qry2 ="INSERT INTO site(name, time, Category) VALUES ('"+Title+"', '"+limit+"', '"+category+"')";
+            db.execSQL(qry2);
+            db.close();
+
+            new AlertDialog.Builder(SubActivity.this)
+                    .setTitle("title")
+                    .setMessage("保存しました。\nまだ続けますか？")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            loadActivity();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whhich){
+                            Intent intent = new Intent(getApplication(), MainActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .show();
+        }
     }
 
 }
