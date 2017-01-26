@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.app.*;
 import android.database.*;
@@ -18,18 +19,24 @@ import android.widget.*;
 public class categoryActivity extends AppCompatActivity {
 
     ListView lv;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadActivity();
 
     }
-    private void loadActivity(){
+
+    private void loadActivity() {
         setContentView(R.layout.activity_category);
         LinearLayout ll = (LinearLayout) findViewById(R.id.activity_category);
         ListView lv = new ListView(this);
         String str = "data/data/" + getPackageName() + "/Sample.db";  //データベースの保存先の指定
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(str, null);  //データベースオブジェクトの生成
+
+
+
+
         String qry3 = "SELECT * FROM site1";  //データ選択のクエリ
         Cursor cr = db.rawQuery(qry3, null);  //クエリ結果をカーソルで受け取り
 
@@ -47,6 +54,7 @@ public class categoryActivity extends AppCompatActivity {
         lv.setAdapter(ad);
         ll.addView(lv);
         setContentView(ll);
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
@@ -88,12 +96,15 @@ public class categoryActivity extends AppCompatActivity {
                         /*Toast.makeText(categoryActivity.this,
                                 editView.getText().toString(),
                                 Toast.LENGTH_LONG).show();*/
-                        String str = "data/data/" + getPackageName() + "/Sample.db";  //データベースの保存先の指定
-                        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(str, null);
-                        String qry2 ="INSERT INTO site1(Category) VALUES ('"+editView.getText().toString()+"')";
-                        db.execSQL(qry2);
-                        db.close();
-                        loadActivity();
+                        if(!TextUtils.isEmpty(editView.getText())) {
+                            String str = "data/data/" + getPackageName() + "/Sample.db";  //データベースの保存先の指定
+                            SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(str, null);
+                            String qry2 = "INSERT INTO site1(Category) VALUES ('" + editView.getText().toString() + "')";
+                            db.execSQL(qry2);
+                            db.close();
+                            loadActivity();
+                        }
+
                     }
                 })
                 .show();
